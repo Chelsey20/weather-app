@@ -4,20 +4,50 @@ import 'package:weather_app/service/weather_service.dart';
 import 'package:weather_app/utils/fonts.dart';
 import 'model/weather.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  //create instance
-  final weatherService = WeatherService();
-  final weather = await weatherService.fetchWeather();
-
-  runApp(MyApp(weather: weather));
+void main() {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Weather? weather;
+  const MyApp({super.key});
 
-  const MyApp({super.key, required this.weather});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: WeatherLoader());
+  }
+}
+
+class WeatherLoader extends StatelessWidget {
+  final WeatherService weatherService = WeatherService();
+
+  WeatherLoader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Weather?>(
+      future: weatherService.fetchWeather(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasError || !snapshot.hasData) {
+          return const Scaffold(
+            body: Center(child: Text('Failed to load weather')),
+          );
+        } else {
+          final weather = snapshot.data!;
+          return WeatherHome(weather: weather); // your home UI
+        }
+      },
+    );
+  }
+}
+
+class WeatherHome extends StatelessWidget {
+  final Weather weather;
+
+  const WeatherHome({super.key, required this.weather});
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +62,16 @@ class MyApp extends StatelessWidget {
               child: Column(
                 children: [
                   /// title
-                  Text('Manila', style: myFonts.title),
-                  Text('19 Deg | Mostly clear', style: myFonts.subtitle),
+                  Text(weather.cityName, style: myFonts.title),
+                  Text(
+                    '${weather.temp} °C | ${weather.desc}',
+                    style: myFonts.subtitle,
+                  ),
 
                   SizedBox(height: 80),
 
                   /// main container
-                  _buildBody(),
+                  _buildBody(weather),
                 ],
               ),
             ),
@@ -49,7 +82,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Widget _buildBody() {
+Widget _buildBody(Weather weather) {
   return Expanded(
     child: Container(
       decoration: BoxDecoration(
@@ -81,7 +114,7 @@ Widget _buildBody() {
                 _buildCard(
                   title: 'Heat Index',
                   icon: 'thermostat',
-                  dataVal: '308.8',
+                  dataVal: weather.heatIndex,
                 ),
 
                 SizedBox(height: 20),
@@ -95,19 +128,19 @@ Widget _buildBody() {
                       _buildCard(
                         title: 'Humidity',
                         icon: 'thermostat',
-                        dataVal: '308.8',
+                        dataVal: weather.humidity,
                       ),
                       _buildCard(
                         title: 'Sunset',
-                        icon: 'sunrise',
-                        dataVal: '308.8',
+                        icon: 'sunset',
+                        dataVal: weather.sunset,
                       ),
                       _buildCard(
                         title: 'Wind speed',
                         icon: 'wind',
-                        dataVal: '308.8',
+                        dataVal: weather.windSpeed,
                       ),
-                      _buildCard(title: 'Rain', icon: 'rain', dataVal: '308.8'),
+                      _buildCard(title: 'Rain', icon: 'rain', dataVal: 308.8),
                     ],
                   ),
                 ),
@@ -123,7 +156,7 @@ Widget _buildBody() {
 Widget _buildCard({
   required String title,
   required String icon,
-  required String dataVal,
+  required var dataVal,
 }) {
   return Container(
     padding: const EdgeInsets.all(10),
@@ -143,7 +176,7 @@ Widget _buildCard({
             Flexible(child: Text(title, style: myFonts.subtitle)),
           ],
         ),
-        Text(dataVal, style: myFonts.normal),
+        Text('$dataVal', style: myFonts.normal),
       ],
     ),
   );
