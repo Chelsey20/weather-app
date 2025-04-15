@@ -1,0 +1,5 @@
+{
+"apiKey": '873c26c3450412192bf6c76559e590a1',
+"id": '1701668',
+"baseUrl": 'https://api.openweathermap.org/data/2.5/weather?id=$id&appid=$apiKey'
+}
