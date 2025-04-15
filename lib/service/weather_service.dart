@@ -12,11 +12,16 @@ class WeatherService {
     final url = '$baseUrl?id=$id&appid=$apiKey';
     final response = await http.get(Uri.parse(url));
 
-    if(response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      return Weather.fromJson(data);
-    } else {
-      print('Failed to fetch JSON weather data: ${response.statusCode}');
+    try {
+      if(response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return Weather.fromJson(data);
+      } else {
+        print('Failed to fetch JSON weather data: ${response.statusCode}');
+        return null;
+      }
+    } catch (e){
+      print(e);
       return null;
     }
   }
