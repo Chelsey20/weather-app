@@ -1,9 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:weather_app/service/weather_service.dart';
 import 'package:weather_app/utils/fonts.dart';
+import 'package:weather_app/utils/format_code.dart';
 import 'model/weather.dart';
 
 void main() {
@@ -73,7 +73,7 @@ class WeatherHome extends StatelessWidget {
                       /// title
                       Text(weather.cityName, style: myFonts.title),
                       Text(
-                        '${(weather.temp / 10).toStringAsFixed(2)} °C | ${weather.desc}',
+                        '${Format.degrees(weather.temp)} °C | ${weather.desc}',
                         style: myFonts.subtitle,
                       ),
 
@@ -98,7 +98,7 @@ Widget _buildBody(Weather weather) {
     child: Padding(
       padding: const EdgeInsets.all(10.0),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Opacity(
@@ -106,7 +106,7 @@ Widget _buildBody(Weather weather) {
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white, width: 0.5),
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
               child: Column(
                 children: [
@@ -132,7 +132,7 @@ Widget _buildBody(Weather weather) {
                         _buildCard(
                           title: 'Heat Index',
                           icon: 'thermostat',
-                          dataVal: weather.heatIndex,
+                          dataVal: '${Format.degrees(weather.heatIndex)} °C',
                         ),
 
                         SizedBox(height: 20),
@@ -146,22 +146,22 @@ Widget _buildBody(Weather weather) {
                               _buildCard(
                                 title: 'Humidity',
                                 icon: 'thermostat',
-                                dataVal: weather.humidity,
+                                dataVal: '${weather.humidity} %',
                               ),
                               _buildCard(
                                 title: 'Sunset',
                                 icon: 'sunset',
-                                dataVal: weather.sunset,
+                                dataVal: Format.sunDate(weather.sunset),
                               ),
                               _buildCard(
                                 title: 'Wind speed',
                                 icon: 'wind',
-                                dataVal: weather.windSpeed,
+                                dataVal: '${weather.windSpeed} m/s',
                               ),
                               _buildCard(
-                                title: 'Rain',
+                                title: weather.main,
                                 icon: 'rain',
-                                dataVal: 308.8,
+                                dataVal: '${weather.condition} %',
                               ),
                             ],
                           ),
@@ -189,7 +189,7 @@ Widget _buildCard({
     decoration: BoxDecoration(
       border: Border.all(color: Colors.white, width: 0.5),
       borderRadius: BorderRadius.circular(10),
-      color: Color(0xFF261d3a),
+      color: Color(0xFF05040c),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,7 +197,12 @@ Widget _buildCard({
       children: [
         Row(
           children: [
-            SvgPicture.asset('asset/svg/$icon.svg', height: 30, width: 30),
+            SvgPicture.asset(
+              'asset/svg/$icon.svg',
+              height: 30,
+              width: 30,
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            ),
             SizedBox(width: 4),
             Flexible(child: Text(title, style: myFonts.subtitle)),
           ],

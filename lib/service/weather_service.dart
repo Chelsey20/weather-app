@@ -16,6 +16,7 @@ class WeatherService {
     sunset: 0,
     main: '',
     windSpeed: 0.0,
+    condition: 0,
   );
 
   Future<Weather?> fetchWeather() async {

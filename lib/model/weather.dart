@@ -7,6 +7,7 @@ class Weather {
   final int sunset;
   final String main;
   final double windSpeed;
+  final int condition;
 
   Weather({
     required this.cityName,
@@ -17,6 +18,7 @@ class Weather {
     required this.sunset,
     required this.main,
     required this.windSpeed,
+    required this.condition,
   });
 
   factory Weather.fromJson(Map<String, dynamic> data) {
@@ -29,6 +31,7 @@ class Weather {
       sunset: data['sys']['sunset'],
       main: data['weather'][0]['main'],
       windSpeed: data['wind']['speed'],
+      condition: data['clouds']['all'],
     );
   }
 }
