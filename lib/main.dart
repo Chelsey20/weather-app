@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:weather_app/service/weather_service.dart';
+import 'package:weather_app/service/weather_service_json.dart';
 import 'package:weather_app/utils/fonts.dart';
 import 'package:weather_app/utils/format_code.dart';
-import 'model/weather.dart';
+import 'model/weather_json.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,13 +20,13 @@ class MyApp extends StatelessWidget {
 }
 
 class WeatherLoader extends StatelessWidget {
-  final WeatherService weatherService = WeatherService();
+  final WeatherJsonService weatherService = WeatherJsonService();
 
   WeatherLoader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Weather?>(
+    return FutureBuilder<WeatherJson?>(
       future: weatherService.fetchWeather(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -47,7 +47,7 @@ class WeatherLoader extends StatelessWidget {
 }
 
 class WeatherHome extends StatelessWidget {
-  final Weather weather;
+  final WeatherJson weather;
 
   const WeatherHome({super.key, required this.weather});
 
@@ -93,7 +93,7 @@ class WeatherHome extends StatelessWidget {
   }
 }
 
-Widget _buildBody(Weather weather) {
+Widget _buildBody(WeatherJson weather) {
   return Expanded(
     child: Padding(
       padding: const EdgeInsets.all(10.0),

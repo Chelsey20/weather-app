@@ -1,4 +1,4 @@
-class Weather {
+class WeatherJson {
   final String cityName;
   final double temp;
   final String desc;
@@ -9,7 +9,7 @@ class Weather {
   final double windSpeed;
   final int condition;
 
-  Weather({
+  WeatherJson({
     required this.cityName,
     required this.temp,
     required this.desc,
@@ -21,8 +21,8 @@ class Weather {
     required this.condition,
   });
 
-  factory Weather.fromJson(Map<String, dynamic> data) {
-    return Weather(
+  factory WeatherJson.fromJson(Map<String, dynamic> data) {
+    return WeatherJson(
       cityName: data['name'],
       temp: (data['main']['temp'] as num).toDouble(),
       desc: data['weather'][0]['description'],

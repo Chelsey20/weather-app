@@ -1,5 +1,5 @@
-import 'package:weather_app/service/weather_service.dart';
-import 'model/weather.dart';
+import 'package:weather_app/service/weather_service_json.dart';
+import 'model/weather_json.dart';
 import 'utils/format_code.dart';
 
 void main() async {
@@ -7,7 +7,7 @@ void main() async {
 }
 
 Future<void> getWeather() async {
-  final weatherService = WeatherService();
+  final weatherService = WeatherJsonService();
   final weather = await weatherService.fetchWeather();
   final format = Format();
 
