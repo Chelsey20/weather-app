@@ -9,7 +9,7 @@ class WeatherXml {
   final String sunset;
   final String main;
   final double windSpeed;
-  final int condition;
+  final String condition;
 
   WeatherXml({
     required this.cityName,
@@ -36,14 +36,13 @@ class WeatherXml {
       humidity: int.parse(
         data.findAllElements('humidity').first.getAttribute('value') ?? '0',
       ),
-      sunset: data.findAllElements('city').first.getAttribute('set') ?? '',
+      sunset: data.findAllElements('sun').first.getAttribute('set') ?? '',
       main: data.findAllElements('clouds').first.getAttribute('name') ?? '',
       windSpeed: double.parse(
         data.findAllElements('speed').first.getAttribute('value') ?? '0',
       ),
-      condition: int.parse(
-        data.findAllElements('clouds').first.getAttribute('name') ?? '',
-      ),
+      condition:
+          data.findAllElements('clouds').first.getAttribute('name') ?? '',
     );
   }
 }

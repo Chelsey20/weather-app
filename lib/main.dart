@@ -1,9 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:weather_app/service/weather_service_json.dart';
 import 'package:weather_app/utils/fonts.dart';
 import 'package:weather_app/utils/format_code.dart';
+import 'package:weather_app/xml_page.dart';
+import 'components/card.dart';
 import 'model/weather_json.dart';
 
 void main() {
@@ -39,7 +40,7 @@ class WeatherLoader extends StatelessWidget {
           );
         } else {
           final weather = snapshot.data!;
-          return WeatherHome(weather: weather); // your home UI
+          return WeatherHome(weatherJson: weather); // your home UI
         }
       },
     );
@@ -47,9 +48,9 @@ class WeatherLoader extends StatelessWidget {
 }
 
 class WeatherHome extends StatelessWidget {
-  final WeatherJson weather;
+  final WeatherJson weatherJson;
 
-  const WeatherHome({super.key, required this.weather});
+  const WeatherHome({super.key, required this.weatherJson});
 
   @override
   Widget build(BuildContext context) {
@@ -71,16 +72,27 @@ class WeatherHome extends StatelessWidget {
                   child: Column(
                     children: [
                       /// title
-                      Text(weather.cityName, style: myFonts.title),
+                      Text(weatherJson.cityName, style: myFonts.title),
                       Text(
-                        '${Format.degrees(weather.temp)} °C | ${weather.desc}',
+                        '${Format.degrees(weatherJson.temp)} °C | ${weatherJson.desc}',
                         style: myFonts.subtitle,
                       ),
 
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => XmlWeatherLoader(),
+                            ),
+                          );
+                        },
+                        child: Text('Click to View XML Integration'),
+                      ),
                       SizedBox(height: 80),
 
                       /// main container
-                      _buildBody(weather),
+                      _buildBody(weatherJson),
                     ],
                   ),
                 ),
@@ -105,7 +117,11 @@ Widget _buildBody(WeatherJson weather) {
             opacity: 0.8,
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 0.5),
+                border: Border(
+                  top: BorderSide(color: Colors.grey, width: 1),
+                  left: BorderSide(color: Colors.grey, width: 1),
+                  right: BorderSide(color: Colors.grey, width: 1),
+                ),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
               child: Column(
@@ -123,50 +139,49 @@ Widget _buildBody(WeatherJson weather) {
                     child: Text('Today\'s Forecast', style: myFonts.subtitle),
                   ),
 
-                  SizedBox(height: 10),
+                  SizedBox(height: 40),
 
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        _buildCard(
-                          title: 'Heat Index',
-                          icon: 'thermostat',
-                          dataVal: '${Format.degrees(weather.heatIndex)} °C',
-                        ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: WeatherCard(
+                      title: 'Heat Index',
+                      icon: 'thermostat',
+                      dataVal: '${Format.degrees(weather.heatIndex)} °C',
+                    ),
+                  ),
 
-                        SizedBox(height: 20),
-                        SizedBox(
-                          height: 400,
-                          child: GridView.count(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            children: [
-                              _buildCard(
-                                title: 'Humidity',
-                                icon: 'thermostat',
-                                dataVal: '${weather.humidity} %',
-                              ),
-                              _buildCard(
-                                title: 'Sunset',
-                                icon: 'sunset',
-                                dataVal: Format.sunDate(weather.sunset),
-                              ),
-                              _buildCard(
-                                title: 'Wind speed',
-                                icon: 'wind',
-                                dataVal: '${weather.windSpeed} m/s',
-                              ),
-                              _buildCard(
-                                title: weather.main,
-                                icon: 'rain',
-                                dataVal: '${weather.condition} %',
-                              ),
-                            ],
+                  Flexible(
+                    child: Center(
+                      child: GridView.count(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        children: [
+                          WeatherCard(
+                            title: 'Humidity',
+                            icon: 'thermostat',
+                            dataVal: '${weather.humidity} %',
                           ),
-                        ),
-                      ],
+                          WeatherCard(
+                            title: 'Sunset',
+                            icon: 'sunset',
+                            dataVal: Format.sunDate(weather.sunset),
+                          ),
+                          WeatherCard(
+                            title: 'Wind speed',
+                            icon: 'wind',
+                            dataVal: '${weather.windSpeed} m/s',
+                          ),
+                          WeatherCard(
+                            title: weather.main,
+                            icon: 'rain',
+                            dataVal: '${weather.condition} %',
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -175,40 +190,6 @@ Widget _buildBody(WeatherJson weather) {
           ),
         ),
       ),
-    ),
-  );
-}
-
-Widget _buildCard({
-  required String title,
-  required String icon,
-  required var dataVal,
-}) {
-  return Container(
-    padding: const EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.white, width: 0.5),
-      borderRadius: BorderRadius.circular(10),
-      color: Color(0xFF05040c),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          children: [
-            SvgPicture.asset(
-              'asset/svg/$icon.svg',
-              height: 30,
-              width: 30,
-              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-            ),
-            SizedBox(width: 4),
-            Flexible(child: Text(title, style: myFonts.subtitle)),
-          ],
-        ),
-        Text('$dataVal', style: myFonts.normal),
-      ],
     ),
   );
 }

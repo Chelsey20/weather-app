@@ -16,7 +16,7 @@ Future<WeatherXml?> weatherXmlService() async {
     sunset: '0',
     main: '',
     windSpeed: 0.0,
-    condition: 0,
+    condition: '',
   );
 
   final response = await http.get(Uri.parse(url));
