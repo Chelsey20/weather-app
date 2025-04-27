@@ -10,6 +10,14 @@ class myFonts {
     ),
   );
 
+  static final weatherTitle = GoogleFonts.raleway(
+    textStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 20.0,
+      fontWeight: FontWeight.w800,
+    ),
+  );
+
   static final subtitle = GoogleFonts.raleway(
     textStyle: TextStyle(
       color: Colors.grey,

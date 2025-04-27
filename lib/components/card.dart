@@ -7,12 +7,14 @@ class WeatherCard extends StatelessWidget {
   final String icon;
   final dynamic dataVal;
   final Color color;
+  final Widget? widget;
 
   const WeatherCard({
     super.key,
     required this.title,
     required this.icon,
-    required this.dataVal,
+    this.dataVal,
+    this.widget,
     this.color = const Color(0xFF091754),
   });
 
@@ -41,10 +43,9 @@ class WeatherCard extends StatelessWidget {
               Flexible(child: Text(title, style: myFonts.subtitle)),
             ],
           ),
-          Text('$dataVal', style: myFonts.normal),
+          widget ?? Text('$dataVal', style: myFonts.normal),
         ],
       ),
     );
-    ;
   }
 }

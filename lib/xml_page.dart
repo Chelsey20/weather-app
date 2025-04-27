@@ -14,7 +14,7 @@ class XmlWeatherLoader extends StatelessWidget {
       future: weatherXmlService(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text('waiting');
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError || !snapshot.hasData) {
           return Text('Has No Data || error');
         } else {
@@ -40,24 +40,34 @@ class WeatherHome extends StatelessWidget {
             padding: const EdgeInsets.only(top: 20.0),
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    size: 40,
-                    color: Colors.black,
-                  ),
-                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        size: 40,
+                        color: Colors.black,
+                      ),
+                    ),
 
-                // title
-                Text(weatherXml.cityName, style: myFonts.title),
-                Text(
-                  '${Format.degrees(weatherXml.temp)} °C | ${weatherXml.desc}',
-                  style: myFonts.subtitle,
+                    // title
+                    Column(
+                      children: [
+                        Text(weatherXml.cityName, style: myFonts.title),
+                        Text(
+                          '${Format.degrees(weatherXml.temp)} °C | ${weatherXml.desc}',
+                          style: myFonts.subtitle,
+                        ),
+                        SizedBox(height: 80),
+                      ],
+                    ),
+                  ],
                 ),
-                SizedBox(height: 80),
 
                 /// main container
                 _buildBody(weatherXml),
