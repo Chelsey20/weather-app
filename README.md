@@ -1,16 +1,27 @@
-# weather_app
+# WeatherApp
+A simple Flutter app that fetches and displays the current weather using the OpenWeatherMap API.
 
-A new Flutter project.
+## Features
+- ✅Fetches real-time weather data from OpenWeatherMap.
+- ✅Supports JSON format.
+- ✅Displays city name, temperature, weather description, humidity, sunset time, and more.
+- ✅Modern, simple UI with customizable weather cards.
+- ✅Error handling for failed network requests.
+- ✅Responsive and ready for both Android and iOS.
 
-## Getting Started
+## Screenshots
+- to be continued
 
-This project is a starting point for a Flutter application.
+## Tech Stack
+Flutter — Frontend framework
 
-A few resources to get you started if this is your first Flutter project:
+Dart — Programming language
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+http package — For API requests
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+xml package — For XML parsing
+
+OpenWeatherMap API — Weather data provider
+
+## Acknowledgements
+[OpenWeatherMap](https://openweathermap.org/api) for providing free weather data.
