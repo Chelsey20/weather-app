@@ -10,7 +10,8 @@ A simple Flutter app that fetches and displays the current weather using the Ope
 - ✅Responsive and ready for both Android and iOS.
 
 ## Screenshots
-- to be continued
+![image](https://github.com/user-attachments/assets/5210cab2-5848-40cb-8011-c847ad2e67ab)
+
 
 ## Tech Stack
 Flutter — Frontend framework
